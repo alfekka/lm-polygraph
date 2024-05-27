@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from .stat_calculator import StatCalculator
 from lm_polygraph.utils.openai_chat import OpenAIChat
 from lm_polygraph.utils.model import WhiteboxModel
-
+from .prompts import CLAIM_EXTRACTION_PROMPTS, MATCHING_PROMPTS
 
 @dataclass
 class Claim:
@@ -17,28 +17,6 @@ class Claim:
     # Indices in the original generation of the tokens, which are related to the current claim
     aligned_tokens: List[int]
 
-
-CLAIM_EXTRACTION_PROMPT = """Please breakdown the sentence into independent claims.
-
-Example:
-Sentence: \"He was born in London and raised by his mother and father until 11 years old.\"
-Claims:
-- He was born in London.
-- He was raised by his mother and father.
-- He was raised by his mother and father until 11 years old.
-
-Sentence: \"{sent}\"
-Claims:"""
-
-MATCHING_PROMPT = (
-    "Given the fact, identify the corresponding words "
-    "in the original sentence that help derive this fact. "
-    "Please list all words that are related to the fact, "
-    "in the order they appear in the original sentence, "
-    "each word separated by comma.\nFact: {claim}\n"
-    "Sentence: {sent}\nWords from sentence that helps to "
-    "derive the fact, separated by comma: "
-)
 
 
 class ClaimsExtractor(StatCalculator):
@@ -66,6 +44,7 @@ class ClaimsExtractor(StatCalculator):
         dependencies: Dict[str, np.array],
         texts: List[str],
         model: WhiteboxModel,
+        language: str = "en",
         *args,
         **kwargs,
     ) -> Dict[str, np.ndarray]:
@@ -100,12 +79,10 @@ class ClaimsExtractor(StatCalculator):
                     greedy_text,
                     greedy_tok,
                     model.tokenizer,
+                    language
                 )
             )
-<<<<<<< HEAD
-=======
             # Iterate over newly added claims to concatenate into list
->>>>>>> origin/claim_level
             for c in claims[-1]:
                 claim_texts_concatenated.append(c.claim_text)
                 claim_input_texts_concatenated.append(inp_text)
@@ -121,19 +98,15 @@ class ClaimsExtractor(StatCalculator):
         text: str,
         tokens: List[int],
         tokenizer,
+        language
     ) -> List[Claim]:
         sentences = []
         for s in re.split(f"[{self.sent_separators}]", text):
             if len(s) > 0:
                 sentences.append(s)
-<<<<<<< HEAD
         if not any(text.endswith(x) for x in self.sent_separators):
-            # remove last unfinished sentence
-=======
-        if len(text) > 0 and text[-1] not in self.sent_separators:
             # Remove last unfinished sentence, because extracting claims
             # from unfinished sentence may lead to hallucinated claims.
->>>>>>> origin/claim_level
             sentences = sentences[:-1]
 
         sent_start_token_idx, sent_end_token_idx = 0, 0
@@ -152,19 +125,13 @@ class ClaimsExtractor(StatCalculator):
             while len(tokenizer.decode(tokens[:sent_end_token_idx])) < sent_end_idx:
                 sent_end_token_idx += 1
 
-<<<<<<< HEAD
-=======
             # Extract claims from current sentence
->>>>>>> origin/claim_level
             for c in self._claims_from_sentence(
                 s,
                 tokens[sent_start_token_idx:sent_end_token_idx],
                 tokenizer,
+                language
             ):
-<<<<<<< HEAD
-=======
-                # Correct aligned tokens positions from sentence-level to generation-level
->>>>>>> origin/claim_level
                 for i in range(len(c.aligned_tokens)):
                     c.aligned_tokens[i] += sent_start_token_idx
                 claims.append(c)
@@ -175,28 +142,22 @@ class ClaimsExtractor(StatCalculator):
         sent: str,
         sent_tokens: List[int],
         tokenizer,
+        language
     ) -> List[Claim]:
-<<<<<<< HEAD
-=======
         # Extract claims with specific prompt
->>>>>>> origin/claim_level
         extracted_claims = self.openai_chat.ask(
-            CLAIM_EXTRACTION_PROMPT.format(sent=sent)
+            CLAIM_EXTRACTION_PROMPTS[language].format(sent=sent)
         )
         claims = []
         for claim_text in extracted_claims.split("\n"):
-<<<<<<< HEAD
-=======
             # Bad claim_text example:
             # - There aren't any claims in this sentence.
->>>>>>> origin/claim_level
             if not claim_text.startswith("- "):
                 continue
             if "there aren't any claims" in claim_text.lower():
                 continue
-<<<<<<< HEAD
             claim_text = claim_text[2:].strip()
-            chat_ask = MATCHING_PROMPT.format(sent=sent, claim=claim_text)
+            chat_ask = MATCHING_PROMPTS[language].format(sent=sent, claim=claim_text)
             match_words = self.openai_chat.ask(chat_ask)
             match_words = match_words.strip().split(",")
             for i in range(len(match_words)):
@@ -204,20 +165,7 @@ class ClaimsExtractor(StatCalculator):
             match_string = self._match_string(sent, match_words)
             if match_string is None:
                 continue
-=======
-            # remove '- ' in the beginning
-            claim_text = claim_text[2:].strip()
-            # Get words which matches the claim using specific prompt
-            chat_ask = MATCHING_PROMPT.format(sent=sent, claim=claim_text)
-            match_words = self.openai_chat.ask(chat_ask)
-            match_words = match_words.strip().split(",")
-            match_words = list(map(lambda x: x.strip(), match_words))
-            # Try to highlight matched symbols in sent
-            match_string = self._match_string(sent, match_words)
-            if match_string is None:
-                continue
-            # Get token positions which intersect with highlighted regions, that is, correspond to the claim
->>>>>>> origin/claim_level
+# Get token positions which intersect with highlighted regions, that is, correspond to the claim
             aligned_tokens = self._align(sent, match_string, sent_tokens, tokenizer)
             if len(aligned_tokens) == 0:
                 continue
@@ -231,7 +179,6 @@ class ClaimsExtractor(StatCalculator):
         return claims
 
     def _match_string(self, sent: str, match_words: List[str]) -> Optional[str]:
-<<<<<<< HEAD
         # Greedily matching words from `match_words` to `sent`.
         # Returns None if mathcing failed, e.g. due to words in match_words, which are not present
         # in sent, or of the words are specified not in the same order they appear in the sentence.
@@ -245,7 +192,6 @@ class ClaimsExtractor(StatCalculator):
         last_match = 0  # pointer to the match_words list
         match_str = ""
         while last < len(sent):
-=======
         """
         Greedily matching words from `match_words` to `sent`.
         Parameters:
@@ -270,12 +216,10 @@ class ClaimsExtractor(StatCalculator):
             cur_word = match_words[last_match]
             # Check if current word cur_word can be located in sent[last:last + len(cur_word)]:
             # 1. check if symbols around word position are not letters
->>>>>>> origin/claim_level
             check_boundaries = False
             if last == 0 or not sent[last - 1].isalpha():
                 check_boundaries = True
             if check_boundaries and last_match < len(match_words):
-<<<<<<< HEAD
                 right_idx = last + len(match_words[last_match])
                 if right_idx < len(sent):
                     check_boundaries = not sent[right_idx].isalpha()
@@ -289,7 +233,6 @@ class ClaimsExtractor(StatCalculator):
                     last_match += 1
                     continue
             # no match at sent[last]
-=======
                 right_idx = last + len(cur_word)
                 if right_idx < len(sent):
                     check_boundaries = not sent[right_idx].isalpha()
@@ -304,17 +247,13 @@ class ClaimsExtractor(StatCalculator):
                     last_match += 1
                     continue
             # No match at sent[last], continue with the next position
->>>>>>> origin/claim_level
             last += 1
             match_str += " "
 
         if last_match < len(match_words):
-<<<<<<< HEAD
             # didn't match all words to the sentence
-=======
             # Didn't match all words to the sentence.
             # Possibly because the match words are in the wrong order or are not present in sentence.
->>>>>>> origin/claim_level
             return None
 
         return match_str
@@ -326,17 +265,6 @@ class ClaimsExtractor(StatCalculator):
         sent_tokens: List[int],
         tokenizer,
     ) -> List[int]:
-<<<<<<< HEAD
-        last = 0
-        last_token = 0
-        aligned_tokens = []
-        while last < len(sent):
-            if last_token >= len(sent_tokens):
-                return aligned_tokens
-            cur_token = tokenizer.decode(sent_tokens[last_token])
-            if len(cur_token) > 0 and sent[last:].startswith(cur_token):
-                # if the match string corresponding to the token contains matches, add to answer
-=======
         """
         Get positions of the tokens which intersects with match string match_str corresponding to the sentence sent.
         """
@@ -352,15 +280,11 @@ class ClaimsExtractor(StatCalculator):
             # Try to find the position of cur_token in sentence, possibly in sent[last]
             if len(cur_token) > 0 and sent[last:].startswith(cur_token):
                 # If the match string corresponding to the token contains matches, add to answer
->>>>>>> origin/claim_level
                 if any(t == "^" for t in match_str[last : last + len(cur_token)]):
                     aligned_tokens.append(last_token)
                 last_token += 1
                 last += len(cur_token)
             else:
-<<<<<<< HEAD
-=======
                 # Continue with the same token and next position in the sentence.
->>>>>>> origin/claim_level
                 last += 1
         return aligned_tokens
