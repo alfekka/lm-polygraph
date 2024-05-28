@@ -192,27 +192,6 @@ class ClaimsExtractor(StatCalculator):
         last_match = 0  # pointer to the match_words list
         match_str = ""
         while last < len(sent):
-        """
-        Greedily matching words from `match_words` to `sent`.
-        Parameters:
-            sent (str): sentence string
-            match_words (List[str]): list of words from sent, in the same order they appear in it.
-        Returns:
-            Optional[str]: string of length len(sent), for each symbol in sent, '^' if it contains in one
-                of the match_words if aligned to sent, ' ' otherwise.
-                Returns None if matching failed, e.g. due to words in match_words, which are not present
-                in sent, or of the words are specified not in the same order they appear in the sentence.
-        Example:
-            sent = 'Lanny Flaherty is an American actor born on December 18, 1949, in Pensacola, Florida.'
-            match_words = ['Lanny', 'Flaherty', 'born', 'on', 'December', '18', '1949']
-            return '^^^^^ ^^^^^^^^                      ^^^^ ^^ ^^^^^^^^ ^^  ^^^^                        '
-        """
-
-        last = 0  # pointer to the sentence
-        last_match = 0  # pointer to the match_words list
-        # Iteratively construct match_str with highlighted symbols, start with empty string
-        match_str = ""
-        while last < len(sent):
             cur_word = match_words[last_match]
             # Check if current word cur_word can be located in sent[last:last + len(cur_word)]:
             # 1. check if symbols around word position are not letters

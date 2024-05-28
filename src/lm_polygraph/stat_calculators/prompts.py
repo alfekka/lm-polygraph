@@ -102,7 +102,7 @@ FACT_CHECK_PORMPTS = { "en": (
 ),
 "ru": (    
     "Верно ли утверждение по мнению самых последних источников информации "
-    """Answer "True", "False" or "Not known"."""
+    """Ответьте "True", "False" или "Not known"."""
     "\n\n"
     "Examples:\n"
     "\n"
