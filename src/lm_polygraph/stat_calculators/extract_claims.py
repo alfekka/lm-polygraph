@@ -192,9 +192,6 @@ class ClaimsExtractor(StatCalculator):
         last_match = 0  # pointer to the match_words list
         match_str = ""
         while last < len(sent):
-            cur_word = match_words[last_match]
-            # Check if current word cur_word can be located in sent[last:last + len(cur_word)]:
-            # 1. check if symbols around word position are not letters
             check_boundaries = False
             if last == 0 or not sent[last - 1].isalpha():
                 check_boundaries = True
@@ -212,27 +209,11 @@ class ClaimsExtractor(StatCalculator):
                     last_match += 1
                     continue
             # no match at sent[last]
-                right_idx = last + len(cur_word)
-                if right_idx < len(sent):
-                    check_boundaries = not sent[right_idx].isalpha()
-            if last_match < len(match_words) and check_boundaries:
-                # 2. check if symbols in word position are the same as cur_word
-                if sent[last:].startswith(cur_word):
-                    # Found match at sent[last] with cur_word
-                    len_w = len(cur_word)
-                    last += len_w
-                    # Highlight this position in match string
-                    match_str += "^" * len_w
-                    last_match += 1
-                    continue
-            # No match at sent[last], continue with the next position
             last += 1
             match_str += " "
 
         if last_match < len(match_words):
             # didn't match all words to the sentence
-            # Didn't match all words to the sentence.
-            # Possibly because the match words are in the wrong order or are not present in sentence.
             return None
 
         return match_str
