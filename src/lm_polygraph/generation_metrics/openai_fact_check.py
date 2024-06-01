@@ -41,9 +41,9 @@ class OpenAIFactCheck(GenerationMetric):
         )
         reply = reply.strip()
         
-        if  "True" in reply or "نعم" in reply:
+        if reply.endswith('True') or reply.endswith('"True"'):
             return 0
-        elif "False" in reply or "لا" in reply:
+        elif reply.endswith('False') or reply.endswith('"False"'):
             return 1
         else:
             return np.nan

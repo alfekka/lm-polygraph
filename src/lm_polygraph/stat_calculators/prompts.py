@@ -87,11 +87,11 @@ FACT_CHECK_PORMPTS = { "en": (
 """
 ),
 "ru": (    
+    "Question: {input}\n"
     "Определи, соответствует ли вся предоставленная информация в следующем"
     "утверждении действительности согласно самым последним источникам информации"
-    "Рассуждай по шагам и на английском языке"
+    "Try to think step-by step and in English"
     "\n\n"
-    "Question: {input}\n"
     "Claim: {claim}\n"
     "Answer: "
 )
@@ -116,21 +116,16 @@ FACT_CHECK_PORMPTS1 = { "en": (
 """
 ),
 "ru": ( 
-    """Обобщи этот ответ одним словом, независимо от того,"""
-    """верно ли утверждение: "True", "False" или "Not known"."""
-    "\n\n"
-    "Examples:\n"
-    "\n"
-    "Opinion: Я считаю это правдой.\n"
-    "Answer: True\n"
-    "\n"
-    "Opinion: Это утверждение не соответствует действительности.\n"
-    "Answer: False\n"
-    "\n"
-    "Your input:\n"
-    "\n"
-    "Opinion: {input}\n"
-    "Answer: "
+    """Question: {input}
+
+Claim: {claim}
+
+Is the following claim true?
+
+Reply: {reply}
+
+Summarize this reply into one word, whether the claim is true: "True", "False" or "Not known".
+"""
     
 )
 }
