@@ -29,13 +29,13 @@ class OpenAIFactCheck(GenerationMetric):
 
     def _score_single(self, claim: str, input: str, openai_chat,language) -> int:
         eply = openai_chat.ask(
-            OPENAI_FACT_CHECK_PROMPT.format(
+            OPENAI_FACT_CHECK_PROMPT[language].format(
                 claim=claim,
                 input=input,
             )
         )
         reply = openai_chat.ask(
-            OPENAI_FACT_CHECK_SUMMARIZE_PROMPT.format(
+            OPENAI_FACT_CHECK_SUMMARIZE_PROMPT[language].format(
                 claim=claim,
                 input=input,
                 reply=reply,
