@@ -65,7 +65,7 @@ MATCHING_PROMPTS = { "en": (
                    }
 
 
-OPENAI_FACT_CHECK_PORMPTS = { "en": (
+OPENAI_FACT_CHECK_PORMPT = { "en": (
     "Determine if all provided information in the following claim"
     "is true according to the most recent sources of information."
 
