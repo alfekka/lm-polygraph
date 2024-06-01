@@ -28,13 +28,19 @@ class OpenAIFactCheck(GenerationMetric):
         return "OpenAIFactCheck"
 
     def _score_single(self, claim: str, input: str, openai_chat,language) -> int:
-        reply = openai_chat.ask(
+        summ = openai_chat.ask(
             FACT_CHECK_PORMPTS[language].format(
                 claim=claim,
                 input=input,
             )
         )
+        reply = openai_chat.ask(
+            FACT_CHECK_PORMPTS1[language].format(
+                input=summ,
+            )
+        )
         reply = reply.strip()
+        
         if  "True" in reply or "نعم" in reply:
             return 0
         elif "False" in reply or "لا" in reply:

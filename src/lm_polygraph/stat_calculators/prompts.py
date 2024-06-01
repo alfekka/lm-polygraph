@@ -66,25 +66,9 @@ MATCHING_PROMPTS = { "en": (
 
 
 FACT_CHECK_PORMPTS = { "en": (
-    "Is the claim correct according to the most "
-    "recent sources of information? "
-    """Answer "True", "False" or "Not known"."""
-    "\n\n"
-    "Examples:\n"
-    "\n"
-    "Question: Tell me a bio of Albert Einstein.\n"
-    "Claim: He was born on 14 March.\n"
-    "Answer: True\n"
-    "\n"
-    "Question: Tell me a bio of Albert Einstein.\n"
-    "Claim: He was born in United Kingdom.\n"
-    "Answer: False\n"
-    "\n"
-    "Your input:\n"
-    "\n"
-    "Question: {input}\n"
-    "Claim: {claim}\n"
-    "Answer: "
+    "Determine if all provided information in the following claim"
+    "is true according to the most recent sources of information."
+
 ),
 "ar": (
     """
@@ -103,23 +87,49 @@ FACT_CHECK_PORMPTS = { "en": (
 """
 ),
 "ru": (    
-    "Верно ли утверждение по мнению самых последних источников информации "
-    """Ответьте "True", "False" или "Not known"."""
+    "Определи, соответствует ли вся предоставленная информация в следующем"
+    "утверждении действительности согласно самым последним источникам информации"
+    "\n\n"
+    "Question: {input}\n"
+    "Claim: {claim}\n"
+    "Answer: "
+)
+}
+FACT_CHECK_PORMPTS1 = { "en": (
+    """Summarize this reply into one word, whether the claim is true: "True", "False" or "Not known"."""
+),
+"ar": (
+    """
+هل الادعاءات صحيحة وفقًا لأحدث مصادر المعلومات؟
+أجب ب "نعم"، "لا" أو "لا يُعرف".
+مثال:
+السياق: أعطني سيرة ذاتية لألبرت أينشتاين.
+الادعاء: وُلد في 14 مارس.
+الجواب: نعم
+السياق: أعطني سيرة ذاتية لألبرت أينشتاين.
+الادعاء: وُلد في المملكة المتحدة.
+الجواب: لا
+الادعاء: {claim}
+السياق: {input}
+الجواب:
+"""
+),
+"ru": ( 
+    """Обобщите этот ответ одним словом, независимо от того,"""
+    """верно ли утверждение: "True", "False" или "Not known"."""
     "\n\n"
     "Examples:\n"
     "\n"
-    "Question: Расскажи биографию Альберта Эйнштейна.\n"
-    "Claim: Он родился 14 марта.\n"
+    "Opinion: Я считаю это правдой.\n"
     "Answer: True\n"
     "\n"
-    "Question: Расскажи биографию Альберта Эйнштейна.\n"
-    "Claim: Он родился в Соединенном Королевстве.\n"
+    "Opinion: Это утверждение не соответствует действительности.\n"
     "Answer: False\n"
     "\n"
     "Your input:\n"
     "\n"
-    "Question: {input}\n"
-    "Claim: {claim}\n"
+    "Opinion: {input}\n"
     "Answer: "
+    
 )
 }
