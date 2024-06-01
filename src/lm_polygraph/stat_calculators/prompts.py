@@ -65,7 +65,7 @@ MATCHING_PROMPTS = { "en": (
                    }
 
 
-FACT_CHECK_PORMPTS = { "en": (
+OPENAI_FACT_CHECK_PORMPTS = { "en": (
     "Determine if all provided information in the following claim"
     "is true according to the most recent sources of information."
 
@@ -96,7 +96,7 @@ FACT_CHECK_PORMPTS = { "en": (
     "Answer: "
 )
 }
-FACT_CHECK_PORMPTS1 = { "en": (
+OPENAI_FACT_CHECK_SUMMARIZE_PROMPT = { "en": (
     """Summarize this reply into one word, whether the claim is true: "True", "False" or "Not known"."""
 ),
 "ar": (

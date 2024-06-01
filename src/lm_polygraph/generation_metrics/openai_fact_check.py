@@ -4,7 +4,7 @@ import os
 from typing import List, Dict
 from lm_polygraph.utils.openai_chat import OpenAIChat
 from .generation_metric import GenerationMetric
-from lm_polygraph.stat_calculators.prompts import FACT_CHECK_PORMPTS, FACT_CHECK_PORMPTS1
+from lm_polygraph.stat_calculators.prompts import OPENAI_FACT_CHECK_PORMPTS, OPENAI_FACT_CHECK_SUMMARIZE_PROMPT
 
 
 
@@ -28,15 +28,17 @@ class OpenAIFactCheck(GenerationMetric):
         return "OpenAIFactCheck"
 
     def _score_single(self, claim: str, input: str, openai_chat,language) -> int:
-        summ = openai_chat.ask(
-            FACT_CHECK_PORMPTS[language].format(
+        eply = openai_chat.ask(
+            OPENAI_FACT_CHECK_PROMPT.format(
                 claim=claim,
                 input=input,
             )
         )
         reply = openai_chat.ask(
-            FACT_CHECK_PORMPTS1[language].format(
-                input=summ,
+            OPENAI_FACT_CHECK_SUMMARIZE_PROMPT.format(
+                claim=claim,
+                input=input,
+                reply=reply,
             )
         )
         reply = reply.strip()
