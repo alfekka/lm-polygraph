@@ -87,13 +87,13 @@ OPENAI_FACT_CHECK_PROMPT = { "en": (
 """
 ),
 "ru": (    
-    "Question: {input}\n"
-    "Определи, соответствует ли вся предоставленная информация в следующем"
-    "утверждении действительности согласно самым последним источникам информации"
-    "Try to think step-by step and in English"
-    "\n\n"
-    "Claim: {claim}\n"
-    "Answer: "
+   """Question: {input}
+
+Determine if all provided information in the following claim is true according to the most recent sources of information.
+
+Claim: {claim}
+"""
+
 )
 }
 OPENAI_FACT_CHECK_SUMMARIZE_PROMPT = { "en": (
