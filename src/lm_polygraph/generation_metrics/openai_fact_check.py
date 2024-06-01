@@ -28,7 +28,7 @@ class OpenAIFactCheck(GenerationMetric):
         return "OpenAIFactCheck"
 
     def _score_single(self, claim: str, input: str, openai_chat,language) -> int:
-        eply = openai_chat.ask(
+        reply = openai_chat.ask(
             OPENAI_FACT_CHECK_PROMPT[language].format(
                 claim=claim,
                 input=input,
