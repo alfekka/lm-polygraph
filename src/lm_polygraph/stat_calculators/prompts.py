@@ -89,8 +89,7 @@ OPENAI_FACT_CHECK_PROMPT = { "en": (
 "ru": (    
    "Question: {input}\n"
     "Определи, соответствует ли вся предоставленная информация в следующем"
-    "утверждении действительности согласно самым последним источникам информации."
-    "Если хотя бы часть утверждения неверна, склоняйся к выводу, что информация ложная. \n"
+    "утверждении действительности согласно самым последним источникам информации. \n"
     "Think step by step on how to summarize the claim within the provided <sketchpad>. \n"
     "Then, return a <summary> based on the <sketchpad>."
     "\n\n"
