@@ -1,5 +1,6 @@
 import subprocess
 import pathlib
+import pytest
 
 # import numpy as np
 
@@ -51,6 +52,21 @@ def test_just_works():
 
 def test_all_seq_ue():
     exec_result = run_config_with_overrides("test_polygraph_eval_seq_ue")
+    assert (
+        exec_result.returncode == 0
+    ), f"polygraph_eval returned code {exec_result.returncode} != 0"
+
+
+def test_blackbox_local():
+    exec_result = run_config_with_overrides("test_polygraph_eval_blackbox_local")
+    assert (
+        exec_result.returncode == 0
+    ), f"polygraph_eval returned code {exec_result.returncode} != 0"
+
+
+@pytest.mark.skip(reason="This is optional test that actually calls OpenAI API")
+def test_blackbox_openai():
+    exec_result = run_config_with_overrides("test_polygraph_eval_blackbox_openai")
     assert (
         exec_result.returncode == 0
     ), f"polygraph_eval returned code {exec_result.returncode} != 0"

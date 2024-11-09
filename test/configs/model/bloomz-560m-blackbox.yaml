@@ -1,0 +1,11 @@
+defaults:
+  - default
+
+path: bigscience/bloomz-560m
+path_to_load_script: ../../examples/configs/model/local_as_blackbox.py
+
+load_model_args:
+  device_map: cpu
+load_tokenizer_args: {}
+
+type: Blackbox
